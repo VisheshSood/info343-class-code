@@ -48,6 +48,7 @@ nav li {
 nav ul {
     margin: 0;
     padding-left: 0;
+    text-align: center;
 }
 
 body {
