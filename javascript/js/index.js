@@ -4,7 +4,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
-     var clickmebutton = document.getElementById("click-me");
+    var clickmebutton = document.getElementById("click-me");
     clickmebutton.addEventListener('click', function () {
         var alerts = document.querySelectorAll('.alert')
 
