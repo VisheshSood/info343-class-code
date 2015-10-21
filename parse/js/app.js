@@ -3,6 +3,8 @@
 */
 Parse.initialize("dmwp0YbNIIzakWfz6pA7NuboChCiTXwK9fKXZl9R", "pdhbayJHBvHrOnEP6uViyfzF2zNmGcI37SYLnm0q");
 
+//Parse.initialize("HwGkNK09YRPy3ZajicPwpZMfX9vqCyc4ghFl2eh7", "14BQF3zAPvaOR1sh6aEzXX5Wk1LTnBFQopjr1Rbj");
+
 $(function() {
     'use strict';
 
@@ -29,7 +31,11 @@ $(function() {
     }
 
     function fetchTasks() {
-        tasksQuery.find().then(onData, displayError);
+        show()
+        tasksQuery.find()
+            .then(onData, displayError)
+            .always(hide());
+
     }
 
     function onData(results) {
@@ -56,9 +62,21 @@ $(function() {
         var task = new Task();
 
         task.set('title', title);
-        task.save().then(fetchTasks(), displayError());
+        task.save().then(fetchTasks, displayError).then(function () {
+            titleInput.val('');
+        });
         return false;
     })
 
+    function show() {
+        $('.fa-spin').show()
+    }
+
+
+    function hide() {
+        $('.fa-spin').hide()
+    }
     fetchTasks();
+
+    window.setInterval(fetchTasks, 3000);
 });
