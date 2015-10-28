@@ -24,6 +24,7 @@
                 <tr>
                     <th>Title</th>
                     <th>Rating</th>
+                    <th>Date</th>
                     <th>Gross Sales</th>
                 </tr>
 
@@ -32,7 +33,9 @@
                 <tr ng-repeat="movie in movies">
                     <td>{{movie.title}}</td>
                     <td>{{movie.rating}}</td>
-                    <td>{{movie.gross}}</td>
+                    <td>{{movie.released | date : 'MMMM dd'}}</td>
+
+                    <td>{{movie.gross | currency}}</td>
                 </tr>
             </tbody>
         </table>
