@@ -1,42 +1,41 @@
 <h1>Edit {{contact.fname}} {{contact.lname}}</h1>
 
-<form name="contactForm" novalidate ng-submit="save()">
+<form class="edit-contact" name="contactForm" novalidate ng-submit="saveContact()">
     <div class="form-group">
-        <label for="fnameImp">
-            First Name:
-        </label>
-        <input type="text" class="form-control" id="fnameImp"
-            name="fnameImp" ng-model="contact.fname"/>
-    </div>
-    <div class="form-group">
-        <label for="lnameImp">
-            Last Name:
-        </label>
-        <input type="text" class="form-control" id="lnameImp"
-            name="lnameImp" ng-model="contact.lname"/>
-    </div>
-    <div class="form-group">
-        <label for="phoneImp">
-            Phone Number:
-        </label>
-        <input type="text" class="form-control" id="phoneImp"
-            name="phoneImp" ng-model="contact.phone"/>
-    </div>
-    <div class="form-group">
-        <div class="g-recaptcha" data-sitekey="6LfYPxATAAAAAH_BeI0NAH1oJkwS2G_9BW8LgRE9" required></div>
-    </div>
-    <div class="form-group">
-        <label for="dobImp">
-            Birthdate:
-        </label>
-        <input type="text" class="form-control" id="dobImp"
-            name="dobImp" ng-model="contact.dob"/>
+        <label for="fnameInp">First Name:</label>
+        <input type="text" class="form-control" id="fnameInp" name="fnameImp" ng-model="contact.fname"
+                placeholder="enter a first name" required autofocus/>
     </div>
 
     <div class="form-group">
-        <a class="btn btn-default" ui-sref="list">Cancel</a>
-        <button type="submit" class="btn btn-info" >Save</button>
+        <label for="lnameInp">Last Name:</label>
+        <input type="text" class="form-control" id="lnameInp" name="lnameInp" ng-model="contact.lname"
+                placeholder="enter a last name" required/>
+        <p class="validation-error" ng-if="contactForm.lnameInp.$error.required">
+            a last name is required
+        </p>
     </div>
 
-    
+    <div class="form-group">
+        <label for="phoneInp">Phone:</label>
+        <input type="tel" class="form-control" id="phoneInp" name="phoneInp" ng-model="contact.phone"
+                placeholder="phone number" required pattern="\d{3}-\d{3}-\d{4}"/>
+        <p class="validation-error" ng-if="contactForm.phoneInp.$error.required">
+            A phone number is required
+        </p>
+        <p class="validation-error" ng-if="contactForm.phoneInp.$error.pattern">
+            Phone numbers must be in the pattern xxx-xxx-xxxx
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="dobInp">Date of Birth:</label>
+        <input type="text" class="form-control" id="dobInp" name="dobInp" ng-model="contact.dob"
+               placeholder="date of birth" />
+    </div>
+
+    <div class="form-group">
+        <a type="button" class="btn btn-default" ui-sref="list">Cancel</a>
+        <button type="submit" class="btn btn-primary" ng-disabled="contactForm.$invalid">Save</button>
+    </div>
 </form>
