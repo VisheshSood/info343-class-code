@@ -9,17 +9,7 @@ angular.module('ContactsApp', ['ui.router', 'angular-uuid', 'LocalStorageModule'
     //this factory function will be called only once, but the return
     //value of this function can be injected into multiple controllers
     .factory('contacts', function(localStorageService, storageKey) {
-        //TODO: load the contacts from local storage
-        //for now just return an array with one test contact
-        return [
-            {
-                id: 'temp-delete-later',
-                fname: 'Fred',
-                lname: 'Flintstone',
-                phone: '206-555-1212',
-                dob: '1/1/1900'
-            }
-        ];
+        return localStorageService.get(storageKey) || [];
     })
     //declare a module configuration function that configures our local UI states
     .config(function($stateProvider, $urlRouterProvider) {
@@ -45,6 +35,17 @@ angular.module('ContactsApp', ['ui.router', 'angular-uuid', 'LocalStorageModule'
         //reset it to #/contacts
         $urlRouterProvider.otherwise('/contacts');
     })
+
+    .directive('inThePast', function() {
+        return {
+            require: 'ngModel', link: function(scope, elem, attrs, controller) {
+                controller.$validators.inThePast = function(modelValue) {
+                    var today = new Date();
+                    return (new Date(modelValue) <= today);
+                }
+            }
+        };
+    })
     //declare the controller for the contacts list view
     //ask Angular to inject the return value of the `contacts` factory
     .controller('ContactsController', function($scope, contacts) {
@@ -64,7 +65,7 @@ angular.module('ContactsApp', ['ui.router', 'angular-uuid', 'LocalStorageModule'
 
     })
     //declare a controller for the edit contact view
-    .controller('EditContactController', function($scope, $stateParams, $state, contacts) {
+    .controller('EditContactController', function($scope, $stateParams, localStorageService, storageKey, $state, contacts, uuid) {
         //just as in the ContactDetailController, the $stateParams object will contain an
         //`id` property set to the ID on the local URL
         //we use this to find the particular contact the user wants to edit
@@ -81,11 +82,16 @@ angular.module('ContactsApp', ['ui.router', 'angular-uuid', 'LocalStorageModule'
         //the view settings will prohibit the user from submitting
         //the form with invalid data
         $scope.saveContact = function() {
-            //copy our edits back to the original contact
-            angular.copy($scope.contact, existingContact);
+            
+            if($scope.contact.id) {
+                 angular.copy($scope.contact, existingContact);
+             } else {
+                $scope.contact.id = uuid.v4();
+                contacts.push($scope.contact)
+             }           
 
             //TODO: save the contacts list to storage
-
+            localStorageService.set(storageKey, contacts);
             //use $state to go back to the list view
             $state.go('list');
         };

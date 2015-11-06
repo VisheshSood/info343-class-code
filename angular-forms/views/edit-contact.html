@@ -31,7 +31,15 @@
     <div class="form-group">
         <label for="dobInp">Date of Birth:</label>
         <input type="text" class="form-control" id="dobInp" name="dobInp" ng-model="contact.dob"
-               placeholder="date of birth" />
+               placeholder="date of birth" in-the-past />
+    </div>
+
+    <div class="form-group">
+        <label for="shoeInp">Shoe Size: </label>
+        <input type="number" class="form-control" id="shoeInp" name="shoeInp" ng-model="contact.shoeSize" required min="4" max="17"/>
+        <p class="validation-error" ng-if="contactForm.shoeInp.$error.min">
+        Too Small!
+        </p>
     </div>
 
     <div class="form-group">
