@@ -13,11 +13,11 @@ document.addEventListener('DOMContentLoaded', function() {
             ball: {
                 left: Math.random() * canvas.width,
                 top:  Math.random() * canvas.height,
-                width: 10,
+                width: 5,
                 height: 5,
-                vectorX: 20,
-                vectorY: 10,
-                velocity: 1
+                vectorX: 1,
+                vectorY: 1,
+                velocity: 2
             },
             paddle: {
                 left: 20,
@@ -49,22 +49,47 @@ document.addEventListener('DOMContentLoaded', function() {
         ball.left += ball.vectorX * ball.velocity;
         ball.top += ball.vectorY * ball.velocity;
 
-        if(ball.left <= 0 || ball.left + ball.width >= canvas.width) {
+        if(ball.left + ball.width >= canvas.width) {
             ball.vectorX = -ball.vectorX;
         }
         if(ball.top <= 0 || ball.top + ball.height >= canvas.height) {
             ball.vectorY = -ball.vectorY;
         }
+        var paddle = gameState.paddle;
+        //bounce if hit paddle
+        if(ball.left <= paddle.left + paddle.width) {
+            if (ball.top + ball.height >= paddle.top  && ball.top <= paddle.top + paddle.height) {
+                ball.vectorX = -ball.vectorX
+            }
+            else {
+                ctx.font = '20px Helvetica';
+                var lol = ctx.measureText('Game Over');
+                ctx.fillText('Game Over', (canvas.width - lol.width) /2, (canvas.height-20)/2)
+                return false;
+            }
+
+        }
+        return true;
     }
 
     function animate(timestamp) {
+        var keepGoing = true;
         render();
         if(timestamp - gameState.lastTimestamp > 16) {
-            step();
+            keepGoing = step();
             gameState.lastTimestamp = timestamp;
         }
-        requestAnimationFrame(animate)
+
+        if (keepGoing) {
+            requestAnimationFrame(animate)
+        }
     }
+
+    document.addEventListener('mousemove', function(evt) {
+        var canvasY = evt.clientY - canvas.offsetTop;
+        var paddle = gameState.paddle;
+        paddle.top = canvasY -(paddle.height/2);
+    })
 
     gameState = newGameState();
 
